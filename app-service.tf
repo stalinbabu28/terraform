@@ -3,13 +3,24 @@ provider "azurerm" {
 }
 
 terraform {
-  backend "azurerm" {
-    resource_group_name  = "stalin-tf-state-rg"
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "3.85.0"
+    }
+  }
+}
+
+
+data "terraform_remote_state" "tf" {
+  backend = "azurerm"
+  config = {
     storage_account_name = "stalintfstatesa"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }
-}  
+}
+
 
 resource "azurerm_resource_group" "example" {
   name     = "example-resources"
