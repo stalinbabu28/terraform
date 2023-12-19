@@ -121,15 +121,6 @@ jobs:
     - name: Terraform Plan
       run: terraform plan 
 
-    - name: Manual Approval
-      run: echo "This workflow requires manual approval. Please review and approve if everything looks good."
-
-    - name: Wait for Approval
-      id: approval
-      uses: octokit/wait-for-workflow@v1
-      with:
-        workflow_id: ${{ github.event.workflow.id }}
-        token: ${{ secrets.GITHUB_TOKEN }}
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
