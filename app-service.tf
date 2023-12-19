@@ -2,8 +2,14 @@ provider "azurerm" {
   features {}
 }
 
-
-
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "stalin-tf-state-rg"
+    storage_account_name = "stalintfstatesa"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
+  }
+}  
 
 resource "azurerm_resource_group" "example" {
   name     = "example-resources"

@@ -69,6 +69,35 @@ jobs:
         inlineScript: |
           az account show  
 
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        azcliversion: latest
+        inlineScript: |
+          # Set variables
+          resourceGroupName="stalin-tf-state-rg"
+          storageAccountName="stalintfstatesa"
+          storageContainerName="tfstate"
+          location="centralindia"
+    
+          # Check if resource group exists
+          if [ $(az group exists --name $resourceGroupName --output tsv) == false ]; then
+            # Create resource group if not exists
+            az group create --name $resourceGroupName --location $location
+          fi
+    
+          # Check if storage account exists
+          if [ $(az storage account check-name --name $storageAccountName --output tsv --query 'nameAvailable') == "true" ]; then
+            # Create storage account if not exists
+            az storage account create --name $storageAccountName --location $location --resource-group $resourceGroupName --sku Standard_LRS
+          fi
+    
+          # Check if storage container exists
+          if [ $(az storage container exists --account-name $storageAccountName --name $storageContainerName --output tsv) == false ]; then
+            # Create storage container if not exists
+            az storage container create --account-name $storageAccountName --name $storageContainerName --public-access off
+          fi
+        
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
